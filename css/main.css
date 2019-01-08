@@ -1,0 +1,14 @@
+body {
+	background-image: url("../img/pokemon.jpg");
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+.hidden {
+	display: none;
+}
+.right {
+	color: green;
+}
+.wrong {
+	color: red;
+}

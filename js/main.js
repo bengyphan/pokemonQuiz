@@ -1,39 +1,48 @@
 var questions = [
     {
-        question: "You're just starting your journey, and the professor offers three Pokémon for you and your friends to pick from. Who picks first?",
-        answers: ["me", "I'll let them go first because I'm nice", "I don't really care", "I can't decide"],
+        question: "Ash is just starting his journey, what pokemon did Ash choose as his first pokemon?",
+        answers: ["Charmander", "Squirtle", "Bulbasaur", "Pikachu"],
+        correct: "Pikachu"
     },
     {
-        question: "Do you think it's better to stay true to yourself or to be constantly changing and adopting new ideas?"
-        answers: ["Prefer to stick to what I believe in", "I like to keep an open-mind"]
+        question: "What town is Ash from?",
+        answers: ["Azalea Town", "Cerulean Town", "Pallet Town", "Mahogany Town"],
+        correct: "Pallet Town"
     },
     {   
-        question: "You see some bad guys stealing from people! You..."
-        answers: ["stop them", "get help", "none of my bees wax"]
+        question: "What is not a category in the Pokemon contests?",
+        answers: ["cuteness", "coolness", "beauty", "talent"],
+        correct: "talent"
     },
     {
-        question: "What super ability would you like to have?"
-        answers: ["super strength", "flying", "breathing under-water", "pyschic", "can't decide, I love them all"]
+        question: "How many shapes/forms can Unown be?",
+        answers: ["26", "32", "38", "28", "20"],
+        correct: "28"
     },
     {
-        question: "What is you biggest stress reliever?"
-        answers: ["music", "dancing", "singing", "reading", "exercise", "something else"]
+        question: "What type is the move sing?",
+        answers: ["normal", "grass", "fairy", "fire"],
+        correct: "normal"
     },
     {
-        question: "What kind of trainer are you?"
-        answers: ["win at all costs!", "its all fun", "I'm competitive, but there's only so far I'll go"]
+        question: "What type is the pokemon Koffing?",
+        answers: ["poison and grass", "poison and flying", "poison and pyschic", "poison"],
+        correct: "poison"
     },
     {
-        question: "Where would you rather live?"
-        answers: ["In the mountains", "near the beach", "somewhere with a lot of trees"]
+        question: "What type of Pokemon does Misty have?",
+        answers: ["grass", "water", "fire"],
+        correct: "water"
     },
     {
-        question: "On your free day what would you like to do?"
-        answers: ["Stay home", "Go outside alone", "go out with your friends"]
+        question: "What is the evolved form of Onix?",
+        answers: ["Ironix", "Steelix", "Copperix", "Stonix"],
+        correct: "Steelix"
     },
     {
-        question: "Are you a girl or guy?",
-        answers: ["I'm a girl", "I'm a dude"]
+        question: "Name the Legendary Pokemon",
+        answers: ["Celebi", "Mew", "Jirachi", "Mespirit"],
+        correct: "Mew"
     }
 ]
 
@@ -43,10 +52,10 @@ function startGame() {
     // clear form before beginning
     questionForm.innerHTML = "";
     // set form to appear in the middle
-    questionForm.style.margin = "12% auto"
+    questionForm.style.margin = "12% auto";
     // load the first question
     createQuestion();
-}
+};
 
 // create the questions
 function createQuestion() {
@@ -60,8 +69,11 @@ function createQuestion() {
         var questionEl = document.createElement("h2");
 
         // add attributes to elements
-        formGroup.className = "formGroup"
-        questionEl.id = "questions" + [i]
+        formGroup.className = "formGroup";
+        formGroup.style.backgroundColor = "#a9a9a9";
+        formGroup.style.padding = "25px"
+        formGroup.style.borderRadius = "10px"
+        questionEl.id = "questions" + [i];
 
         // create question text
         var questionText = document.createTextNode(questions[i].question);
@@ -71,6 +83,21 @@ function createQuestion() {
 
         // add element to the dom 
         formGroup.appendChild(questionEl);
+
+        // question 10 add Legendary Pokemon picture
+
+        if(questions[i].question == "Name the Legendary Pokemon") {
+        var mewImg = document.createElement("img");
+
+        mewImg.src = "img/mew.png";
+        mewImg.alt = "Legendary Pokemon Mew";
+        mewImg.style.backgroundColor = "green";
+
+        formGroup.appendChild(mewImg);
+        };
+
+        // add formgroup to questionForm
+        questionForm.appendChild(formGroup);
 
         // add answers to the dom
         for(var j = 0; j < questions[i].answers.length; j++) {
@@ -101,10 +128,79 @@ function createQuestion() {
 
     // add attributes
     submitBtn.type = "button";
-    submitBtn.className = "btn btn-lg btn-primary";
+    submitBtn.className = "btn btn-med btn-primary";
     submitBtn.textContent = "Submit Answer"
     submitBtn.onclick = submitAnswer
 
     // add button to form group
     questionForm.appendChild(submitBtn);
-}
+
+    // create a back button
+    var backBtn = document.createElement("button");
+
+    // add attributes
+    backBtn.type = "button";
+    backBtn.className = "btn btn-med btn-dark float-right";
+    backBtn.textContent = "Back";
+    backBtn.onclick = goBack;
+
+    // add button to form group
+    questionForm.appendChild(backBtn);
+
+};
+
+
+function submitAnswer() {
+    // get all the elements with input tag
+    var els = document.getElementsByTagName("input");
+
+    // loop through all possible answers
+    for(var i=0; i < els.length; i++) {
+        // check which answer is correct 
+        if (els[i].checked && els[i].value.trim() == questions[0].correct.trim()) {
+            // confirm for developer that the user got the question correct
+            console.log("Correct Answer", els[i]);
+            // remove the current question from the questions arranged
+            questions.shift();
+            
+            // find parent and add class of right
+            els[i].parentElement.className = "questionWrap right";
+
+            // check to see if there are any more questions if 0 then game over
+            if(questions.length == 0)  {
+                // clear any previous html
+                questionForm.innerHTML = "";
+
+                // update the styles of questionForm
+                questionForm.style.textAlign = "center";
+                questionForm.style.margin = "0 auto";
+
+
+                // Display game over to the user
+                questionForm.innerHTML = "<h1> Good Job you have completed the Quiz!</h1>" + "<br>" + "<img src='img/success.jpg'>";
+
+                // stop when the user wins
+                return;
+            };
+            // if the user is correct and more questions exist, move to the next question
+            setTimeout(function(){
+                createQuestion();
+            }, 2000)
+            // stop the funciton, user got it correct
+            return;
+            };
+        };
+    // confirm to developer ataht the user got the answer correct
+    console.log("Incorrect Answer");
+
+    // find the parent element to it and add a class of wrong 
+    for (var i = 0; i < els.length; i++) {
+        // find correct radio selected
+        if(els[i].checked) {
+            // find parent element add class of wrong
+            els[i].parentElement.className = "questionWrap wrong";
+        };
+    }; 
+    // end for loop
+};
+
